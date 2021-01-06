@@ -10,6 +10,11 @@ ARRAY METHODS;
 - find (find index)
 - map
 - [0]
+- slice
+
+DICTIONARY
+
+- .##
 
 */
 
@@ -19,27 +24,65 @@ function buildMetadata(sample) {
     d3.json("samples.json").then((response) => {
 
         var metadata = response.metadata
-
         var sampleItem = metadata.find(meta => meta.id == sample);
+        var demoInfo = d3.select("#sample-metadata")
 
-        console.log(sampleItem);
+        // Clear out old queries
+        demoInfo.html("");
 
+        Object.entries(sampleItem).forEach(([key, value]) => {
+            var heading = demoInfo.append("h6");
+            heading.text(`${key} : ${value}`);
+        });
     });
-
-
 }
 
 // Define a function that will create charts for given sample
 function buildCharts(sample) {
 
-    //d3.json("samples.json").then((response) => {}
+    d3.json("samples.json").then((response) => {
+        var samplesArray = response.samples
+        var sampleItem = samplesArray.find(array => array.id == sample);
 
-    // Parse and filter the data to get the sample's OTU data
-    // Pay attention to what data is required for each chart
+        var otu_idsArray = sampleItem.otu_ids;
+        var otu_labelsArray = sampleItem.otu_labels;
+        var sample_valuesArray = sampleItem.sample_values;
 
-    // Create bar chart in correct location
+        var new_otu_idsArray = otu_idsArray.map(item => `OTU ${item}`);
 
-    // Create bubble chart in correct location
+        // Create bar chart in correct location
+        var data = [{
+            type: 'bar',
+            x: sample_valuesArray.slice(0, 10).reverse(),
+            y: new_otu_idsArray.slice(0, 10).reverse(),
+            orientation: 'h',
+            text: otu_labelsArray.slice(0, 10).reverse()
+        }];
+
+        Plotly.newPlot("bar", data);
+
+        var trace1 = {
+            x: otu_idsArray,
+            y: sample_valuesArray,
+            mode: 'markers',
+            marker: {
+                size: sample_valuesArray,
+                color: otu_idsArray},
+            text: otu_labelsArray,
+          };
+          
+          var data2 = [trace1];
+          
+          var layout = {
+            title: 'BELLY BUTTONS',
+            showlegend: false,
+            height: 600,
+            width: 600
+          };
+          
+          Plotly.newPlot('bubble', data2, layout);
+
+    });
 
 }
 
@@ -57,11 +100,7 @@ function init() {
         });
 
         var firstItem = response.names[0]
-        // Parse and filter data to get sample names
-        // Add dropdown option for each sample - Iteration & add to dropdown
-        // Array Name Options... 
 
-        // Use first sample to build metadata and initial plots
         buildMetadata(firstItem);
         buildCharts(firstItem);
 
