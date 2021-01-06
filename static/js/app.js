@@ -1,15 +1,33 @@
 /* The following is an example on how you might structure your code.
 This is not the only way to complete this assignment.
-Feel free to disregard and create your own code */
+Feel free to disregard and create your own code 
+
+
+ARRAY METHODS;
+- forEach
+- push
+- filter
+- find (find index)
+- map
+
+*/
+
+
+
+
 
 // Define a function that will create metadata for given sample
 function buildMetadata(sample) {
 
-    // Read the json data
+    d3.json("samples.json").then((response) => {
+        var sampleArray = response.metadata.filter((bananas) => {
+            bananas.id == "940"
+        });
 
-    // Parse and filter the data to get the sample's metadata
+        console.log(sampleArray);
 
-    // Specify the location of the metadata and update it
+    });
+
 
 }
 
@@ -32,7 +50,7 @@ function init() {
 
     // Read json data
     d3.json("samples.json").then((response) => {
-        console.log(response)
+        // console.log(response)
 
         response.names.forEach((item) => {
             var option = d3.select("#selDataset").append("option");
@@ -40,20 +58,23 @@ function init() {
             option.property("value", item);
         });
 
+        var firstItem = response.names[0]
         // Parse and filter data to get sample names
         // Add dropdown option for each sample - Iteration & add to dropdown
         // Array Name Options... 
 
         // Use first sample to build metadata and initial plots
+        buildMetadata(firstItem);
+        buildCharts(firstItem);
 
     });
 }
 
 function optionChanged(newSample) {
     console.log(newSample);
-    // Update metadata with newly selected sample
 
-    // Update charts with newly selected sample
+    buildMetadata(newSample);
+    buildCharts(newSample);
 
 }
 
