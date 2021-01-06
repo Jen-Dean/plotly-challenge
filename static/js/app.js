@@ -67,20 +67,44 @@ function buildCharts(sample) {
             mode: 'markers',
             marker: {
                 size: sample_valuesArray,
-                color: otu_idsArray},
+                color: otu_idsArray
+            },
             text: otu_labelsArray,
-          };
-          
-          var data2 = [trace1];
-          
-          var layout = {
-            title: 'BELLY BUTTONS',
-            showlegend: false,
-            height: 600,
-            width: 600
-          };
-          
-          Plotly.newPlot('bubble', data2, layout);
+        };
+
+        var data2 = [trace1];
+
+
+        Plotly.newPlot('bubble', data2);
+
+        var wfreq = response.metadata.find(element => element.id == sample).wfreq;
+
+        var data = [
+            {
+                domain: { x: [0, 1], y: [0, 1] },
+                value: wfreq,
+                title: { text: "Belly Button Washing" },
+                type: "indicator",
+                mode: "gauge+number+delta",
+                gauge: {
+                    axis: { range: [0, 9] },
+                    bar: { color: "purple"},
+                    steps: [
+                        { range: [0, 1], color: "whitesmoke" },
+                        { range: [1, 2], color: "whitesmoke" },
+                        { range: [2, 3], color: "whitesmoke" },
+                        { range: [3, 4], color: "gray" },
+                        { range: [4, 5], color: "gray" },
+                        { range: [5, 6], color: "gray" },
+                        { range: [6, 7], color: "black" },
+                        { range: [7, 8], color: "black" },
+                        { range: [8, 9], color: "black" },
+                    ],
+                }
+            }
+        ];
+
+        Plotly.newPlot('gauge', data);
 
     });
 
