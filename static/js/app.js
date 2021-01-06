@@ -9,22 +9,20 @@ ARRAY METHODS;
 - filter
 - find (find index)
 - map
+- [0]
 
 */
-
-
-
-
 
 // Define a function that will create metadata for given sample
 function buildMetadata(sample) {
 
     d3.json("samples.json").then((response) => {
-        var sampleArray = response.metadata.filter((bananas) => {
-            bananas.id == "940"
-        });
 
-        console.log(sampleArray);
+        var metadata = response.metadata
+
+        var sampleItem = metadata.find(meta => meta.id == sample);
+
+        console.log(sampleItem);
 
     });
 
@@ -34,7 +32,7 @@ function buildMetadata(sample) {
 // Define a function that will create charts for given sample
 function buildCharts(sample) {
 
-    // Read the json data
+    //d3.json("samples.json").then((response) => {}
 
     // Parse and filter the data to get the sample's OTU data
     // Pay attention to what data is required for each chart
